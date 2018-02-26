@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+
+    <title>Progress Tool</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/loader.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/img/icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png">
+    <link rel="manifest" href="/img/icons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/icons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body>
+    <div id="app">
+      <div id="loading-spinner-overlay"></div>
+      <div id="loading-spinner-wrapper">
+          <div class="loader">
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+              <span class="loader-item"></span>
+          </div>
+      </div>
+
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <router-link class="navbar-brand" to="/">
+          <span>Progress Tool</span>
+        </router-link>
+        <img src="/img/subtle-spinner.svg" class="navbar-subtle-spinner">
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item" v-bind:class="{ active: $router.history.current.meta.highlightMenuItem && $router.history.current.meta.highlightMenuItem === 'home' }" v-on:click="collapseNav()">
+              <router-link class="nav-link" to="/home">Home</router-link>
+            </li>
+            <li class="nav-item" v-bind:class="{ active: $router.history.current.meta.highlightMenuItem && $router.history.current.meta.highlightMenuItem === 'sign-in' }" v-if="!signedIn" v-on:click="collapseNav()">
+              <router-link class="nav-link" to="/sign-in">Sign In</router-link>
+            </li>
+            <li class="nav-item" v-bind:class="{ active: $router.history.current.meta.highlightMenuItem && $router.history.current.meta.highlightMenuItem === 'members' }" v-if="signedIn" v-on:click="collapseNav()">
+              <router-link class="nav-link" to="/members">Members</router-link>
+            </li>
+            <li class="nav-item dropdown" v-bind:class="{ active: $router.history.current.meta.highlightMenuItem && $router.history.current.meta.highlightMenuItem === 'account' }" v-if="signedIn">
+              <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <span v-on:click="collapseNav()">
+                  <router-link class="dropdown-item" to="/change-password" v-on:click="collapseNav()">Change password</router-link>
+                </span>
+                <span v-on:click="collapseNav()">
+                  <a class="dropdown-item" v-on:click="signOut()" v-on:click="collapseNav()">Sign Out</a>
+                </span>
+              </div>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0" v-if="$router.history.current.name === 'members'">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search members" aria-label="Search members" v-model="searchQuery" v-on:keyup="searchUpdated()">
+          </form>
+        </div>
+      </nav>
+
+      <main role="main" class="container">
+          <router-view></router-view>
+      </main><!-- /.container -->
+    </div>
+
+    <script src="/lib/wolfy87-eventemitter/EventEmitter.min.js"></script>
+    <script src="/lib/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/popper.js/dist/umd/popper.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/lib/vue/dist/vue.min.js"></script> <!-- should switch to min version in prod -->
+    <script src="/lib/vue-router/dist/vue-router.min.js"></script> <!-- should switch to min version in prod -->
+    <script src="/js/ajax.js"></script>
+    <script src="/js/components.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
