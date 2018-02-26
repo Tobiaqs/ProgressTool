@@ -1,0 +1,177 @@
+body {
+    padding-top: 5rem;
+}
+
+.centered-with-padding {
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.centered {
+    text-align: center;
+}
+
+.right-aligned {
+    text-align: right;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+    font-weight: normal;
+}
+
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.form-signin .text-wrong-credentials {
+    color: red;
+}
+
+#loading-spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    background-color: white;
+    z-index: 10;
+    opacity: 0.7;
+}
+
+#loading-spinner-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    z-index: 11;
+}
+
+.level-bg, .level-bg-line {
+    background-repeat: no-repeat;
+    transition: background-size 0.5s;
+}
+
+.level-bg {
+    background-size: 0% 100%;
+}
+
+.level-bg-line {
+    background-position-y: bottom;
+    background-size: 0% 16px/**/;
+}
+
+[data-level="1"] {
+    background-image: url(/img/level_1.png);
+}
+
+[data-level="2"] {
+    background-image: url(/img/level_2.png);   
+}
+
+[data-level="3"] {
+    background-image: url(/img/level_3.png);
+}
+
+[data-level="4"] {
+    background-image: url(/img/level_4.png);
+}
+
+[data-level="5"] {
+    background-image: url(/img/level_5.png);
+}
+
+[data-level="6"] {
+    background-image: url(/img/level_6.png);
+}
+
+.level-bg[data-level="1"] {
+    background-size: 16.7% 100%;
+}
+
+.level-bg[data-level="2"] {
+    background-size: 33.3% 100%;
+}
+
+.level-bg[data-level="3"] {
+    background-size: 50% 100%;
+}
+
+.level-bg[data-level="4"] {
+    background-size: 66.7% 100%;
+}
+
+.level-bg[data-level="5"] {
+    background-size: 83.3% 100%;
+}
+
+.level-bg[data-level="6"] {
+    background-size: 100% 100%;
+}
+
+.level-bg-line[data-level="1"] {
+    background-size: 16.7% 16px/**/;
+}
+
+.level-bg-line[data-level="2"] {
+    background-size: 33.3% 16px/**/;
+}
+
+.level-bg-line[data-level="3"] {
+    background-size: 50% 16px/**/;
+}
+
+.level-bg-line[data-level="4"] {
+    background-size: 66.7% 16px/**/;
+}
+
+.level-bg-line[data-level="5"] {
+    background-size: 83.3% 16px/**/;
+}
+
+.level-bg-line[data-level="6"] {
+    background-size: 100% 16px/**/;
+}
+
+.btn-level.btn-level-current {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.btn-level-group-wrapper {
+    text-align: center;
+}
+
+.clickable {
+    cursor: pointer;
+}
