@@ -155,6 +155,13 @@
                 name: 'member',
                 component: components.Member,
                 props: true,
+                meta: { requiresSignIn: true, shareTokenPermitted: true, highlightMenuItem: 'members' }
+            },
+            {
+                path: '/members/:memberId/share-report',
+                name: 'share-report',
+                component: components.ShareReport,
+                props: true,
                 meta: { requiresSignIn: true, highlightMenuItem: 'members' }
             },
             {
@@ -193,6 +200,9 @@
             // Prevent the user from navigating while the application
             // is loading something important
             next(false);
+        } else if (to.meta.shareTokenPermitted && to.query.share_token) {
+            // Make sure that if the user is using a share token, the route is allowed.
+            next();
         } else if (!authToken && to.meta.requiresSignIn) {
             // Prevent the user from navigating to an access controlled area
             next('/sign-in');

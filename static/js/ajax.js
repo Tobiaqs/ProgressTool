@@ -91,6 +91,21 @@
         .then((body) => body.json())
         .then((json) => json.member);
     };
+
+    /**
+     * Asynchronous method that gets the share token for
+     * a single member.
+     */
+    Ajax.prototype.getShareToken = function (memberId) {
+        return this._fetch('/api/members/' + memberId + '/share_token', {
+            method: 'GET',
+            headers: {
+                'X-Auth-Token': this.getAuthToken()
+            }
+        })
+        .then((body) => body.json())
+        .then((json) => json.share_token);
+    };
     
     /**
      * Asynchronous method that gets a structure containing criteria.
