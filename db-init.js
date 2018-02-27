@@ -1,5 +1,6 @@
 module.exports = (db) => {
     const sha256 = require('sha256');
+    const fs = require('fs');
     const helpers = require('./helpers');
 
     db.serialize(() => {
@@ -103,59 +104,12 @@ module.exports = (db) => {
         db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Thijs', 'thijs', sha256('thijs123'), 1);
         db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Laurence', 'laurence', sha256('laurence123'), 1);
         db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Tobias', 'tobias', sha256('tobias123'), 1);
-    
-        const members = `
-            Nakita Negrin
-            Frida Fajardo
-            Maris Mantyla
-            Aleen Alire
-            Antonette Archambault
-            Herma Hernadez
-            Deedra Derksen
-            Luise Lenton
-            Roosevelt Rogerson
-            Garnet Greve
-            Britt Burd
-            Madelene Mcgraw
-            Mercedez Mercure
-            Maryellen Mcvey
-            Shakia Sorber
-            Parthenia Pea
-            Daniel Dover
-            Georgina Griffiths
-            Terrell Thigpen
-            Raymon Rosado
-            Marc Mccreary
-            Laurie Lipari
-            Kortney Knoll
-            Wm Woodham
-            Jamal Jagger
-            Tinisha Tobar
-            Adell Abdullah
-            Lasonya Liska
-            Donald Demelo
-            Janeth Juhl
-            Oliver Orange
-            Vivan Valadez
-            Man Mills
-            Donna Desai
-            Jannie Jarosz
-            Cayla Captain
-            Kaci Kuta
-            Dorathy Dahlen
-            Janey Jantzen
-            Kristen Knapp
-            Lettie Lage
-            Shayna Sturgeon
-            Maddie Mailhot
-            Soila Stainbrook
-            Winston Wyer
-            Anderson Ayres
-            Arcelia Arboleda
-            Benito Briski
-            Felisha Fitzhenry
-            Margrett Marcy
-        `.trim().split('\n').map((name) => name.trim());
+        
+        let members = [];
+        
+        if (fs.existsSync(__dirname + '/member_seed.txt')) {
+            members = fs.readFileSync(__dirname + '/member_seed.txt', 'utf8').trim().split('\n').map((name) => name.trim());
+        }
     
         members.forEach((name) => db.run('INSERT INTO members (name) VALUES (?)', name));
     
