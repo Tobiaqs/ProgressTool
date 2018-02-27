@@ -63,6 +63,12 @@ module.exports = (dbMethods, middleware) => {
             res.json({ success: true });
         });
     });
+
+    api.get('/members/:id/share_token', middleware.needParamId, (req, res) => {
+        dbMethods.getShareToken(req.params.id, (share_token) => {
+            res.json({ share_token: share_token });
+        });
+    });
     
     api.get('/criteria_captions_with_criteria', middleware.authToken, (req, res) => {
         dbMethods.getCriteriaCaptionsWithCriteria((criteriaCaptions) => {

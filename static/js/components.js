@@ -7,6 +7,30 @@
     // The levels that can be used in a rating
     const levels = [1, 2, 3, 4, 5, 6];
 
+    // Sharing services
+    const sharingServices = [
+        {
+            name: 'WhatsApp',
+            share (url, caption) {
+                window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(caption ? (caption + '\n' + url) : ''));
+            }
+        },
+
+        {
+            name: 'Telegram',
+            share (url, caption) {
+                window.open('https://telegram.me/share/url?url=' + encodeURIComponent(url) + (caption ? '&text=' + encodeURIComponent(caption) : ''));
+            }
+        },
+
+        {
+            name: 'Email',
+            share (url, caption) {
+                location.href = 'mailto:?body=' + encodeURIComponent(caption ? caption + '\n' + url : url) + (caption ? '&subject=' + encodeURIComponent(caption) : '');
+            }
+        }
+    ];
+
     /**
      * Returns a label for a level.
      */
@@ -49,6 +73,13 @@
                                 <li>Skipper avatars</li>
                                 <li>Heroku-esque hosting</li>
                                 <li>Integration with member management system</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Backend wishlist</h2>
+                            <ul>
+                                <li>Database migration</li>
+                                <li>Schema validation</li>
                             </ul>
                         </div>
                     </div>
@@ -129,8 +160,8 @@
                 template: `
                     <div class="centered-with-padding">
                         <h1>Members List</h1>
-                        <ul class="list-group">
-                            <li class="list-group-item clickable" v-for="member in members" v-on:click="showMember(member)">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item list-group-item-member clickable" v-for="member in members" v-on:click="showMember(member)">
                                 {{ member.name }}
                                 <span>
                                     <br>
@@ -262,8 +293,9 @@
                             <h1>Progress Report</h1>
                             <h3>{{ member ? member.name : '' }}</h3>
                             <div class="btn-group mt-2" role="group" aria-label="Update member">
-                                <button type="button" class="btn btn-secondary" v-on:click="changeMemberName(member)">Change name</button>
-                                <button type="button" class="btn btn-danger" v-on:click="deleteMember(member)">Delete member</button>
+                                <button type="button" class="btn btn-secondary" v-on:click="changeMemberName(member)">Rename</button>
+                                <button type="button" class="btn btn-danger" v-on:click="deleteMember(member)">Delete</button>
+                                <!-- <button type="button" class="btn btn-primary" v-on:click="shareReport(member)">Share</button> -->
                             </div>
                         </div>
                         <div class="row">
@@ -273,8 +305,9 @@
                                         <h5 class="card-title">{{ criteriaCaption.caption }}</h5>
                                         <ul class="list-group">
                                             <li
-                                                class="list-group-item level-bg-line clickable"
+                                                class="list-group-item list-group-item-criterion level-bg-line"
                                                 v-for="criterion in criteriaCaption.criteria"
+                                                v-bind:class="{ 'clickable': !fastRatingStagedLevels[criterion.id] }"
                                                 :data-level="showLevels ? getLatestRatingLevel(criterion) : 0"
                                                 v-on:click="viewCriterion(criterion)">
     
@@ -406,6 +439,10 @@
                         }
 
                         getRouter().push({ name: 'criterion', params: { memberId: this.memberId, criterionId: criterion.id } })
+                    },
+
+                    shareReport (member) {
+                        getRouter().push({ name: 'share-report', params: { memberId: this.member.id } })
                     },
     
                     changeMemberName (member) {
@@ -550,6 +587,61 @@
                         fastRatingStagedRemarks: {}
                     };
                 }
+            },
+
+            // ShareReport component
+            ShareReport: {
+                props: ['memberId'],
+
+                template: `
+                    <div class="centered-with-padding">
+                        <h1>Progress Report</h1>
+                        <h3>{{ member ? member.name : '' }}</h3>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item list-group-item-service clickable" v-for="sharingService in sharingServices" v-on:click="shareWith(sharingService)">
+                                {{ sharingService.name }}
+                            </li>
+                        </ul>
+                    </div>
+                `,
+
+                methods: {
+                    /**
+                     * Loads the required data from the API for the share report screen.
+                     */
+                    loadResources () {
+                        appMethods.setIsLoading(true);
+                        
+                        this.member = null;
+                        
+                        Promise.all([
+                            ajax.getMember(this.memberId),
+                            ajax.getShareToken(this.memberId)
+                        ]).then((results) => {
+                            this.member = results[0];
+                            this.shareToken = results[1];
+
+                            appMethods.setIsLoading(false);
+                        });
+                    },
+
+                    shareWith (sharingService) {
+                        sharingService.share(location.protocol + '//' + location.hostname + (location.port !== 80 ? ':' + location.port : '') + '/#/members/' + this.memberId + '?share_token=' + this.shareToken,
+                            'Progress Report for ' + this.member.name);
+                    }
+                },
+
+                created () {
+                    this.loadResources();
+                },
+
+                data: () => {
+                    return {
+                        member: null,
+                        sharingServices: sharingServices,
+                        shareToken: null
+                    };
+                },
             },
     
             // Criterion component

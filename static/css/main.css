@@ -21,14 +21,6 @@ body {
     margin: 0 auto;
 }
 
-.form-signin .checkbox {
-    margin-bottom: 10px;
-}
-
-.form-signin .checkbox {
-    font-weight: normal;
-}
-
 .form-signin .form-control {
     position: relative;
     height: auto;
@@ -46,11 +38,13 @@ body {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
+
 .form-signin input[type="password"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
 .form-signin .text-wrong-credentials {
     color: red;
 }
@@ -79,7 +73,7 @@ body {
 
 .level-bg, .level-bg-line {
     background-repeat: no-repeat;
-    transition: background-size 0.5s;
+    transition: background-size 0.5s, background-color .5s;
 }
 
 .level-bg {
@@ -174,4 +168,12 @@ body {
 
 .clickable {
     cursor: pointer;
+}
+
+.list-group-item-member, .list-group-item-service {
+    transition: background-color .5s;
+}
+
+.list-group-item-member:hover, .list-group-item-criterion.clickable:hover, .list-group-item-service:hover {
+    background-color: #F0F4FF;
 }

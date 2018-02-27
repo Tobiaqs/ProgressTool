@@ -29,7 +29,7 @@
   height: 40px;
   width: 4px;
   margin: 0 2px;
-  background-color: #96ED13;
+  background-color: #cdd400;
 }
 .loader .loader-item:nth-child(1) {
   -webkit-animation: loader-item-1 2s linear infinite;

@@ -76,6 +76,32 @@ module.exports = (db) => {
                 });
             });
         },
+
+        getShareToken (memberId, cb) {
+            db.get('SELECT share_token FROM members WHERE id = ?', memberId, (err, row) => {
+                if (err) {
+                    throw err;
+                }
+        
+                if (!row) {
+                    return cb(null);
+                }
+                
+                if (row.share_token) {
+                    cb(row.share_token);
+                } else {
+                    const shareToken = uuid.v4();
+
+                    db.run('UPDATE members SET share_token = ? WHERE id = ?', shareToken, memberId, (err) => {
+                        if (err) {
+                            throw err;
+                        }
+
+                        cb(shareToken);
+                    });
+                }
+            });
+        },
         
         getRater (raterId, cb) {
             db.get('SELECT id, name FROM raters WHERE id = ?', raterId, (err, rater) => {

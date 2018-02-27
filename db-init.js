@@ -16,7 +16,8 @@ module.exports = (db) => {
             );
             CREATE TABLE members (
                 id INTEGER PRIMARY KEY,
-                name TEXT
+                name TEXT,
+                share_token TEXT
             );
             CREATE TABLE ratings (
                 id INTEGER PRIMARY KEY,
