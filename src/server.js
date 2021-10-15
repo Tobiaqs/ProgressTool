@@ -14,8 +14,8 @@ const server = require('http').Server(app);
 
 const helpers = require('./helpers');
 
-const isDatabaseNew = !fs.existsSync('progresstool.db');
-const db = new sqlite3.Database('progresstool.db', function() {
+const isDatabaseNew = !fs.existsSync(env.db);
+const db = new sqlite3.Database(env.db, function() {
     // Periodic cleanup
     setInterval(() => {
         db.run('DELETE FROM auth_tokens WHERE expiry_timestamp < ?', helpers.getTimestamp());

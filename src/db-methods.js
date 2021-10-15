@@ -28,8 +28,8 @@ module.exports = (db) => {
             });
         },
         
-        createAuthToken (email, password, cb) {
-            db.get('SELECT id FROM raters WHERE email = ? AND password_hash = ?', email, sha256(password), (err, row) => {
+        createAuthToken (username, password, cb) {
+            db.get('SELECT id FROM raters WHERE username = ? AND password_hash = ?', username, sha256(password), (err, row) => {
                 if (err) {
                     throw err;
                 }

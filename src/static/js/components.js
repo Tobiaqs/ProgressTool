@@ -95,8 +95,8 @@
                     <div class="centered-with-padding">
                         <h1>Sign in</h1>
                         <div class="form-signin">
-                            <label for="inputEmail" class="sr-only">Email address</label>
-                            <input type="email" class="form-control" placeholder="Email address" required autofocus v-model="email" v-on:keydown="keyDown">
+                            <label for="inputUsername" class="sr-only">Username</label>
+                            <input type="text" class="form-control" placeholder="Username" required autofocus v-model="username" v-on:keydown="keyDown">
                             <label for="inputPassword" class="sr-only">Password</label>
                             <input type="password" class="form-control" placeholder="Password" required v-model="password" v-on:keydown="keyDown">
                             <button class="btn btn-lg btn-primary btn-block" v-on:click="signIn()">Sign in</button>
@@ -115,7 +115,7 @@
                         // Show modal loading animation
                         appMethods.setIsLoading(true);
     
-                        ajax.createAuthToken(this.email, this.password).then((newAuthToken) => {
+                        ajax.createAuthToken(this.username, this.password).then((newAuthToken) => {
                             // Result's in
     
                             // Hide the modal loading animation
@@ -144,7 +144,7 @@
                 },
                 data: () => {
                     return {
-                        email: '',
+                        username: '',
                         password: '',
                         wrongCredentialsEntered: false
                     };

@@ -6,22 +6,22 @@ module.exports = (db) => {
     db.serialize(() => {
         db.exec(`
             CREATE TABLE criteria_captions (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 caption TEXT
             );
             CREATE TABLE criteria (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 criterion TEXT,
                 criteria_caption_id INTEGER,
                 FOREIGN KEY(criteria_caption_id) REFERENCES criteria_captions(id) ON UPDATE CASCADE ON DELETE RESTRICT
             );
             CREATE TABLE members (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
                 share_token TEXT
             );
             CREATE TABLE ratings (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 member_id INTEGER,
                 criterion_id INTEGER,
                 rater_id INTEGER,
@@ -33,14 +33,14 @@ module.exports = (db) => {
                 FOREIGN KEY(rater_id) REFERENCES raters(id) ON UPDATE CASCADE ON DELETE SET NULL
             );
             CREATE TABLE raters (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
-                email TEXT,
+                username TEXT,
                 password_hash TEXT,
                 superuser INTEGER
             );
             CREATE TABLE auth_tokens (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 rater_id INTEGER,
                 auth_token TEXT,
                 expiry_timestamp INTEGER,
@@ -95,23 +95,6 @@ module.exports = (db) => {
                 ]
             }
         ];
-    
-        // -- from here on: test data
-    
-        db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Schipper Thimo', 'thimo', sha256('thimo123'), 1);
-        db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Schipper Frederike', 'frederike', sha256('frederike123'), 1);
-        db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Schipper Eva', 'eva', sha256('eva123'), 1);
-        db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Thijs', 'thijs', sha256('thijs123'), 1);
-        db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Laurence', 'laurence', sha256('laurence123'), 1);
-        db.run('INSERT INTO raters (name, email, password_hash, superuser) VALUES (?, ?, ?, ?)', 'Tobias', 'tobias', sha256('tobias123'), 1);
-        
-        let members = [];
-        
-        if (fs.existsSync(__dirname + '/member_seed.txt')) {
-            members = fs.readFileSync(__dirname + '/member_seed.txt', 'utf8').trim().split('\n').map((name) => name.trim());
-        }
-    
-        members.forEach((name) => db.run('INSERT INTO members (name) VALUES (?)', name));
     
         criteria.forEach((captionSet) => {
             db.run('INSERT INTO criteria_captions (caption) VALUES (?)', captionSet.caption, function (err, row) {

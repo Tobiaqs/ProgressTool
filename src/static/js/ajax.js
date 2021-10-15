@@ -34,15 +34,15 @@
     
     /**
      * Asynchronous method that creates an auth token based on
-     * email and password.
+     * username and password.
      */
-    Ajax.prototype.createAuthToken = function (email, password) {
+    Ajax.prototype.createAuthToken = function (username, password) {
         return this._fetch('/api/create_auth_token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email: email, password: password })
+            body: JSON.stringify({ username: username, password: password })
         })
         .then((body) => body.json())
         .then((json) => json.auth_token);

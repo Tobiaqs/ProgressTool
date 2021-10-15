@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+    node:
+        build:
+            context: ./src
+        working_dir: /app/src
+        command: node server.js
+        restart: unless-stopped
+        volumes:
+            - ./src:/app/src:ro
+            - sqlite:/app/db
+        environment:
+            - VIRTUAL_HOST=${VIRTUAL_HOST}
+            - VIRTUAL_PORT=3000
+            - NODEJS_APP_PORT=3000
+            - NODEJS_APP_IP=0.0.0.0
+            - NODEJS_APP_ENV
+        init: true
+        expose:
+            - 3000
+        networks:
+            - app
+            - proxy_ptool
+
+    adminer:
+        build:
+            context: ./adminer
+        restart: unless-stopped
+        networks:
+            - app
+            - proxy_ptool
+        environment:
+            - VIRTUAL_HOST=${VIRTUAL_HOST_ADMINER}
+            - VIRTUAL_PORT=8080
+        volumes:
+            - sqlite:/sqlite
+        expose:
+            - 8080
+
+volumes:
+    sqlite:
+
+networks:
+    app:
+        name: "${COMPOSE_PROJECT_NAME}_app"
+    proxy_ptool:
+        external: true

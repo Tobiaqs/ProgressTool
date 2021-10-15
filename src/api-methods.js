@@ -5,7 +5,7 @@ module.exports = (dbMethods, middleware) => {
     api.use('/', require('body-parser').json());
 
     api.post('/create_auth_token', (req, res) => {
-        dbMethods.createAuthToken(req.body.email, req.body.password, (authToken) => {
+        dbMethods.createAuthToken(req.body.username, req.body.password, (authToken) => {
             res.json({ auth_token: authToken });
         });
     });
