@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-WORKDIR /app/src
+WORKDIR /app
 
 # Install NPM 7
 RUN npm install --global npm@7

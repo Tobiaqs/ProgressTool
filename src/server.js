@@ -34,7 +34,7 @@ const middleware = require('./middleware')(db);
 const api = require('./api-methods')(dbMethods, middleware);
 
 app.use('/api', api);
-app.use('/lib', express.static(__dirname + '/node_modules'));
+app.use('/lib', express.static(__dirname + '/../node_modules'));
 app.use('/', express.static(__dirname + '/static'));
 
 server.listen(env.port, env.ip);
