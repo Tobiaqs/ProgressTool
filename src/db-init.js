@@ -104,23 +104,11 @@ module.exports = (db) => {
     
                 const captionID = this.lastID;
     
-                let timestamp = helpers.getTimestamp() - 200000;
-    
                 captionSet.criteria.forEach((criterion) => {
                     db.run('INSERT INTO criteria (criterion, criteria_caption_id) VALUES (?, ?)', criterion, captionID, function (err) {
                         if (err) {
                             throw err;
                         }
-    
-                        const lastID = this.lastID;
-                        members.forEach((v, k) => {
-                            db.run('INSERT INTO ratings (member_id, criterion_id, rater_id, level, remark, timestamp) VALUES (?, ?, ?, ?, ?, ?)',
-                            k + 1, lastID, Math.floor(Math.random() * 3) + 1, Math.floor(Math.random() * 2) + 1, Math.random() > 0.5 ? "Just doesn't get it" : null, timestamp - 36000000);
-                            timestamp ++;
-                            db.run('INSERT INTO ratings (member_id, criterion_id, rater_id, level, remark, timestamp) VALUES (?, ?, ?, ?, ?, ?)',
-                            k + 1, lastID, Math.floor(Math.random() * 3) + 1, Math.floor(Math.random() * 4) + 3, Math.random() > 0.5 ? "Can keep the boat afloat" : null, timestamp);
-                            timestamp ++;
-                        });
                     });
                 });
             });
