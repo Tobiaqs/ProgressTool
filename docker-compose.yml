@@ -16,6 +16,7 @@ services:
             - NODEJS_APP_PORT=3000
             - NODEJS_APP_IP=0.0.0.0
             - NODEJS_APP_ENV
+            - NODEJS_APP_DB
         init: true
         expose:
             - 3000
