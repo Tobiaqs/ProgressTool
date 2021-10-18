@@ -42,7 +42,6 @@
             case 4: return "Aspirant";
             case 5: return "Skipper I";
             case 6: return "Skipper II";
-            default: return "Onbekend"
         }
     };
 
@@ -282,7 +281,7 @@
     
             // Member component
             Member: {
-                props: ['memberId'],
+                props: ['memberId', 'shareToken'],
                 /**
                  * This template is the most complicated one. It displays an overview of ratings for a member,
                  * and also allows the rater to quickly add new ratings.
@@ -292,13 +291,13 @@
                         <div class="centered">
                             <h1>Progress Report</h1>
                             <h3>{{ member ? member.name : '' }}</h3>
-                            <div class="btn-group mt-2" role="group" aria-label="Update member">
+                            <div v-if="this.memberId" class="btn-group mt-2" role="group" aria-label="Update member">
                                 <button type="button" class="btn btn-secondary" v-on:click="changeMemberName(member)">Rename</button>
                                 <button type="button" class="btn btn-danger" v-on:click="deleteMember(member)">Delete</button>
-                                <!-- <button type="button" class="btn btn-primary" v-on:click="shareReport(member)">Share</button> -->
+                                <button type="button" class="btn btn-primary" v-on:click="shareReport(member)">Share</button>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" v-bind:class="{ 'disable-clicks': this.shareToken }">
                             <div class="col-md-6 col-xl-4" v-for="criteriaCaption in criteriaCaptions">
                                 <div class="card mt-4">
                                     <div class="card-body">
@@ -391,15 +390,19 @@
                         this.member = null;
                         this.latestRatings = null;
                         this.criteriaCaptions = null;
-    
-                        Promise.all([
-                            ajax.getMember(this.memberId),
-                            ajax.getLatestRatings(this.memberId),
-                            ajax.getCriteriaCaptionsWithCriteria()
-                        ]).then((results) => {
-                            this.member = results[0];
-                            this.latestRatings = results[1];
-                            this.criteriaCaptions = results[2];
+
+                        let promise;
+
+                        if (this.memberId) {
+                            promise = ajax.getReport(this.memberId);
+                        } else if (this.shareToken) {
+                            promise = ajax.getReportByShareToken(this.shareToken);
+                        }
+
+                        promise.then((results) => {
+                            this.member = results.member;
+                            this.latestRatings = results.latest_ratings;
+                            this.criteriaCaptions = results.criteria_captions;
     
                             appMethods.setIsLoading(false);
     
@@ -430,7 +433,7 @@
                     getLatestRatingLevel (criterion) {
                         const rating = this.getLatestRating(criterion);
     
-                        return rating ? rating.level : 0;
+                        return rating ? rating.level : 1;
                     },
     
                     viewCriterion (criterion) {
@@ -523,7 +526,10 @@
                     },
     
                     fastRatingSelectLevel (criterion, level) {
-                        if (this.fastRatingStagedLevels[criterion.id] === level || level === this.getLatestRatingLevel(criterion)) {
+                        const latestRating = this.getLatestRating(criterion);
+                        const latestRatingLevel = latestRating ? latestRating.level : null;
+
+                        if (this.fastRatingStagedLevels[criterion.id] === level || level === latestRatingLevel) {
                             this.$set(this.fastRatingStagedLevels, criterion.id, null);
                         } else {
                             this.$set(this.fastRatingStagedLevels, criterion.id, level);
@@ -602,6 +608,7 @@
                                 {{ sharingService.name }}
                             </li>
                         </ul>
+                        <textarea class="url-textarea">{{ this.getReportURL() }}</textarea>
                     </div>
                 `,
 
@@ -625,9 +632,12 @@
                         });
                     },
 
+                    getReportURL() {
+                        return location.protocol + '//' + location.host + '/#/members/report/' + this.shareToken;
+                    },
+
                     shareWith (sharingService) {
-                        sharingService.share(location.protocol + '//' + location.hostname + (location.port !== 80 ? ':' + location.port : '') + '/#/members/' + this.memberId + '?share_token=' + this.shareToken,
-                            'Progress Report for ' + this.member.name);
+                        sharingService.share(this.getReportURL(), 'Progress Report for ' + this.member.name);
                     }
                 },
 
@@ -660,7 +670,7 @@
                                         :title="getLevelLabel(level)"
                                         v-for="level in levels"
                                         class="btn btn-level"
-                                        v-bind:class="{ 'btn-level-current': ratings && ratings.length !== 0 && level === ratings[0].level }"
+                                        v-bind:class="{ 'btn-level-current': ratings && ((ratings.length !== 0 && level === ratings[0].level) || (level === 1 && ratings.length === 0)) }"
                                         :data-level="level"
                                         v-on:click="addRating(level)">
 
@@ -679,7 +689,7 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-12" v-for="rating in ratings">
-                                            <div class="card mt-4 level-bg" v-bind:class="{ 'clickable': rater.id === rating.rater_id }" :data-level="showLevels ? rating.level : 0" v-on:click="changeRemark(rating)">
+                                            <div class="card mt-4 level-bg" v-bind:class="{ 'clickable': rater.id === rating.rater_id }" :data-level="showLevels ? rating.level || 1 : 0" v-on:click="changeRemark(rating)">
                                                 <div class="card-body">
                                                     <h5 class="card-title">Rated as {{ getLevelLabel(rating.level) }}</h5>
                                                     <h6 class="card-subtitle mb-2 text-muted">By {{ rating.rater_name }} on {{ getDateString(rating.timestamp) }}</h6>

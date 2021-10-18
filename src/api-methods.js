@@ -69,6 +69,34 @@ module.exports = (dbMethods, middleware) => {
             res.json({ share_token: share_token });
         });
     });
+
+    api.get('/members/report/:share_token', middleware.needParamShareToken, (req, res) => {
+        dbMethods.getMemberByShareToken(req.params.share_token, (member) => {
+            dbMethods.getCriteriaCaptionsWithCriteria((criteriaCaptions) => {
+                dbMethods.getLatestRatings(member.id, (latestRatings) => {
+                    res.json({
+                        member: member,
+                        criteria_captions: criteriaCaptions,
+                        latest_ratings: latestRatings
+                    });
+                });
+            });
+        });
+    });
+
+    api.get('/members/:id/report', middleware.needParamId, (req, res) => {
+        dbMethods.getMember(req.params.id, (member) => {
+            dbMethods.getCriteriaCaptionsWithCriteria((criteriaCaptions) => {
+                dbMethods.getLatestRatings(req.params.id, (latestRatings) => {
+                    res.json({
+                        member: member,
+                        criteria_captions: criteriaCaptions,
+                        latest_ratings: latestRatings
+                    });
+                });
+            });
+        });
+    });
     
     api.get('/criteria_captions_with_criteria', middleware.authToken, (req, res) => {
         dbMethods.getCriteriaCaptionsWithCriteria((criteriaCaptions) => {

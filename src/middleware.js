@@ -55,6 +55,14 @@ module.exports = (db) => {
                 next();
             }
         },
+
+        needParamShareToken (req, res, next) {
+            if ((typeof req.params.share_token) === 'string' && helpers.testUUID(req.params.share_token)) {
+                next();
+            } else {
+                res.sendStatus(500);
+            }
+        },
         
         needParamCriterionId (req, res, next) {
             if ((typeof req.params.criterionId) === 'string') {

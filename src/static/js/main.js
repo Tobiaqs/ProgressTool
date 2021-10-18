@@ -158,6 +158,13 @@
                 meta: { requiresSignIn: true, shareTokenPermitted: true, highlightMenuItem: 'members' }
             },
             {
+                path: '/members/report/:shareToken',
+                name: 'report',
+                component: components.Member,
+                props: true,
+                meta: { requiresShareToken: true, highlightMenuItem: 'members' }
+            },
+            {
                 path: '/members/:memberId/share-report',
                 name: 'share-report',
                 component: components.ShareReport,
@@ -200,7 +207,8 @@
             // Prevent the user from navigating while the application
             // is loading something important
             next(false);
-        } else if (to.meta.shareTokenPermitted && to.query.share_token) {
+        } else if (to.meta.requiresShareToken && to.params.share_token &&
+            /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(to.params.share_token)) {
             // Make sure that if the user is using a share token, the route is allowed.
             next();
         } else if (!authToken && to.meta.requiresSignIn) {

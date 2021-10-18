@@ -143,6 +143,20 @@ module.exports = (db) => {
                 if (err) {
                     throw err;
                 }
+
+                delete row['share_token'];
+        
+                cb(row);
+            });
+        },
+
+        getMemberByShareToken (share_token, cb) {
+            db.get('SELECT * FROM members WHERE share_token = ?', share_token, (err, row) => {
+                if (err) {
+                    throw err;
+                }
+
+                delete row['share_token'];
         
                 cb(row);
             });

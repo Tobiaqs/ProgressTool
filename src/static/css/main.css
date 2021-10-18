@@ -177,3 +177,15 @@ body {
 .list-group-item-member:hover, .list-group-item-criterion.clickable:hover, .list-group-item-service:hover {
     background-color: #F0F4FF;
 }
+
+.disable-clicks {
+    pointer-events: none;
+    cursor: default;
+}
+
+.url-textarea {
+    margin-top: 12px;
+    width: 600px;
+    text-align: center;
+    max-width: 90%;
+}

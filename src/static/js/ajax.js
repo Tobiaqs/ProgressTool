@@ -93,6 +93,32 @@
     };
 
     /**
+     * Asynchronous method that gets a report by member ID.
+     */
+     Ajax.prototype.getReport = function (memberId) {
+        return this._fetch('/api/members/' + memberId + '/report', {
+            method: 'GET',
+            headers: {
+                'X-Auth-Token': this.getAuthToken()
+            }
+        })
+        .then((body) => body.json())
+    };
+
+    /**
+     * Asynchronous method that gets a report by share token.
+     */
+     Ajax.prototype.getReportByShareToken = function (shareToken) {
+        return this._fetch('/api/members/report/' + shareToken, {
+            method: 'GET',
+            headers: {
+                'X-Auth-Token': this.getAuthToken()
+            }
+        })
+        .then((body) => body.json())
+    };
+
+    /**
      * Asynchronous method that gets the share token for
      * a single member.
      */
