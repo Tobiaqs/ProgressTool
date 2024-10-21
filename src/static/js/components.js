@@ -311,7 +311,7 @@
                                                 {{ criterion.criterion }}
                                                 <br>
                                                 <small class="text-muted">
-                                                    {{ getLevelLabel(fastRatingStagedLevels[criterion.id] || getLatestRatingLevel(criterion)) || 'No rating yet' }}
+                                                    {{ getLevelLabel(fastRatingStagedLevels[criterion.id] || getLatestRatingLevel(criterion)) || '-' }}
                                                     
                                                     <span v-if="
                                                     (
