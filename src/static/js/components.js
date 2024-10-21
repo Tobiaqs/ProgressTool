@@ -296,7 +296,7 @@
                             </div>
                         </div>
                         <div class="row" v-bind:class="{ 'disable-clicks': this.shareToken }">
-                            <div class="col-md-6 col-xl-4" v-for="criteriaCaption in criteriaCaptions">
+                            <div class="col-md-6 col-xl-4 col-xxxl-3" v-for="criteriaCaption in criteriaCaptions">
                                 <div class="card mt-4">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ criteriaCaption.caption }}</h5>

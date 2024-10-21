@@ -53,7 +53,8 @@ module.exports = (db) => {
                 caption: 'Algemeen',
                 criteria: [
                     'Zeilvaardigheid',
-                    'Communicatie naar bemanning'
+                    'Communicatie naar bemanning',
+                    'Gebruik dit veld voor overige opmerkingen',
                 ]
             },
             {
@@ -99,12 +100,6 @@ module.exports = (db) => {
                     'Afvaren van lagerwal',
                     'Aankomen op lagerwal',
                     'Ankeren'
-                ]
-            },
-            {
-                caption: 'Overig',
-                criteria: [
-                    'Gebruik dit veld voor overige opmerkingen',
                 ]
             },
         ];
