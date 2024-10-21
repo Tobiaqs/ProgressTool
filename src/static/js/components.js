@@ -311,7 +311,7 @@
                                                 {{ criterion.criterion }}
                                                 <br>
                                                 <small class="text-muted">
-                                                    {{ getLevelLabel(fastRatingStagedLevels[criterion.id] || getLatestRatingLevel(criterion)) }}
+                                                    {{ getLevelLabel(fastRatingStagedLevels[criterion.id] || getLatestRatingLevel(criterion)) || 'No rating yet' }}
                                                     
                                                     <span v-if="
                                                     (
@@ -668,7 +668,7 @@
                                         :title="getLevelLabel(level)"
                                         v-for="level in levels"
                                         class="btn btn-level"
-                                        v-bind:class="{ 'btn-level-current': ratings && ((ratings.length !== 0 && level === ratings[0].level) || (level === 1 && ratings.length === 0)) }"
+                                        v-bind:class="{ 'btn-level-current': ratings && ratings.length !== 0 && level === ratings[0].level }"
                                         :data-level="level"
                                         v-on:click="addRating(level)">
 
