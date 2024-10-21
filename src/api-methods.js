@@ -123,6 +123,13 @@ module.exports = (dbMethods, middleware) => {
             res.json({ success: true });
         });
     });
+
+    api.delete('/members/:id/ratings/:ratingId',
+        middleware.authToken, middleware.needParamId, middleware.needParamRatingId, (req, res) => {
+        dbMethods.deleteRating(req.params.id, req.params.ratingId, req.$raterId, () => {
+            res.json({ success: true });
+        });
+    });
     
     api.put('/members/:id/ratings_for_criterion/:criterionId',
         middleware.authToken, middleware.needParamId, middleware.needParamCriterionId, middleware.needRating, (req, res) => {

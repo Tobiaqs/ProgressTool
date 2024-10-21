@@ -50,6 +50,13 @@ module.exports = (db) => {
     
         const criteria = [
             {
+                caption: 'Algemeen',
+                criteria: [
+                    'Zeilvaardigheid',
+                    'Communicatie naar bemanning'
+                ]
+            },
+            {
                 caption: 'Schip gereedmaken voor toekomstige omstandigheden',
                 criteria: [
                     'Schip zeilklaar maken',
@@ -93,7 +100,13 @@ module.exports = (db) => {
                     'Aankomen op lagerwal',
                     'Ankeren'
                 ]
-            }
+            },
+            {
+                caption: 'Overig',
+                criteria: [
+                    'Gebruik dit veld voor overige opmerkingen',
+                ]
+            },
         ];
     
         criteria.forEach((captionSet) => {

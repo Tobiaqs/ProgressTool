@@ -208,6 +208,20 @@
     };
 
     /**
+     * Asynchronous method that removes a member.
+     */
+    Ajax.prototype.deleteRating = function (memberId, ratingId) {
+        return this._fetch('/api/members/' + memberId + '/ratings/' + ratingId, {
+            method: 'DELETE',
+            headers: {
+                'X-Auth-Token': this.getAuthToken()
+            }
+        })
+        .then((body) => body.json())
+        .then((json) => json.success);
+    };
+
+    /**
      * Asynchronous method that gets a member's latest ratings.
      */
     Ajax.prototype.getLatestRatings = function (memberId) {

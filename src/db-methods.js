@@ -291,6 +291,16 @@ module.exports = (db) => {
                 });
             });
         },
+
+        deleteRating (memberId, ratingId, raterId, cb) {
+            db.get('DELETE FROM ratings WHERE rater_id = ? AND id = ? AND member_id = ?', raterId, ratingId, memberId, (err) => {
+                if (err) {
+                    throw err;
+                }
+        
+                cb(true);
+            });
+        },
         
         addRatingForCriterion (memberId, criterionId, raterId, rating, cb) {
             db.run(`

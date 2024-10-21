@@ -63,14 +63,12 @@
                             <ul>
                                 <li>Reset password through email</li>
                                 <li>Superuser options such as creating accounts, promoting others to superuser</li>
-                                <li>Sharing progress report with members by means of a public link</li>
                             </ul>
                         </div>
                         <div class="col-md-6">
                             <h2>Ideas</h2>
                             <ul>
                                 <li>Skipper avatars</li>
-                                <li>Heroku-esque hosting</li>
                                 <li>Integration with member management system</li>
                             </ul>
                         </div>
@@ -433,7 +431,7 @@
                     getLatestRatingLevel (criterion) {
                         const rating = this.getLatestRating(criterion);
     
-                        return rating ? rating.level : 1;
+                        return rating ? rating.level : null;
                     },
     
                     viewCriterion (criterion) {
@@ -814,35 +812,74 @@
                                 }
                             },
                             title: 'Change remarks',
-                            buttons: ['Cancel', 'Save']
+                            buttons: {
+                                cancel: {
+                                    text: 'Cancel',
+                                    value: null,
+                                    visible: true,
+                                },
+                                delete: {
+                                    text: 'Delete rating',
+                                    value: false,
+                                },
+                                save: {
+                                    text: 'Save',
+                                    value: true,
+                                },
+                            },
                         }).then((result) => {
                             if (result === null) {
                                 return;
                             }
-    
-                            // Workaround for weird swal problem
-                            // where result = "" when the value is
-                            // equal to the initial value
-                            result = $('.swal-content__input').val().trim();
-    
-                            rating.remark = result.length === 0 ? null : result;
 
-                            appMethods.setIsLoadingSubtle(true);
-    
-                            ajax.updateRating(this.memberId, rating.id, rating).then((success) => {
-                                if (success) {
-                                    this.$set(rating, 'remark', result);
+                            if (result) {    
+                                // Workaround for weird swal problem
+                                // where result = "" when the value is
+                                // equal to the initial value
+                                result = $('.swal-content__input').val().trim();
+        
+                                rating.remark = result.length === 0 ? null : result;
 
-                                    appMethods.setIsLoadingSubtle(false);
-                                } else {
-                                    swal({
-                                        icon: 'error',
-                                        text: 'This action cannot be carried out for some reason.'
-                                    });
-    
-                                    this.reloadRatings();
-                                }
-                            });
+                                appMethods.setIsLoadingSubtle(true);
+        
+                                ajax.updateRating(this.memberId, rating.id, rating).then((success) => {
+                                    if (success) {
+                                        this.$set(rating, 'remark', result);
+
+                                        appMethods.setIsLoadingSubtle(false);
+                                    } else {
+                                        swal({
+                                            icon: 'error',
+                                            text: 'This action cannot be carried out for some reason.'
+                                        });
+        
+                                        this.reloadRatings();
+                                    }
+                                });
+                            } else {
+                                swal({
+                                    text: 'Are you sure you want to remove this rating from the database?',
+                                    icon: 'warning',
+                                    buttons: ['Cancel', 'Remove']
+                                }).then((result) => {
+                                    if (result) {
+                                        appMethods.setIsLoadingSubtle(true);
+        
+                                        // Delete rating
+                                        ajax.deleteRating(this.memberId, rating.id).then((success) => {
+                                            if (success) {
+                                                this.reloadRatings();
+                                                appMethods.setIsLoadingSubtle(false);
+                                            } else {
+                                                swal({
+                                                    icon: 'error',
+                                                    text: 'This action cannot be carried out for some reason.'
+                                                });
+                                            }
+                                        });
+                                    }
+                                })
+                            }
                         });
                     }
                 },

@@ -46,12 +46,14 @@
      */
     function setIsLoading (loading) {
         isLoading = loading;
-
-        if (loading) {
-            $('#loading-spinner-overlay, #loading-spinner-wrapper').show();
-        } else {
-            $('#loading-spinner-overlay, #loading-spinner-wrapper').hide();
-        }
+        
+        setTimeout(() => {
+            if (loading) {
+                $('#loading-spinner-overlay, #loading-spinner-wrapper').show();
+            } else {
+                $('#loading-spinner-overlay, #loading-spinner-wrapper').hide();
+            }
+        }, 0)
     };
 
     /**
